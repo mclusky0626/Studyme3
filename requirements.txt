@@ -1,0 +1,4 @@
+discord.py>=2.4
+openai>=1.60
+chromadb>=0.5
+python-dotenv>=1.0
