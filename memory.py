@@ -38,9 +38,23 @@ async def search(query: str, user_id: str | None = None,
         where={"user_id": str(user_id)} if user_id else None,
     )
     return [
-        {"content": doc, "user_id": meta["user_id"], "user_name": meta["user_name"]}
-        for doc, meta in zip(res["documents"][0], res["metadatas"][0])
+        {
+            "id": mid,
+            "content": doc,
+            "user_id": meta["user_id"],
+            "user_name": meta["user_name"],
+            "saved_at": time.strftime("%Y-%m-%d %H:%M", time.localtime(meta["ts"])),
+        }
+        for mid, doc, meta in zip(res["ids"][0], res["documents"][0], res["metadatas"][0])
     ]
+
+
+def delete(mem_ids: list[str]) -> int:
+    """기억 ID 목록으로 삭제. 존재하는 것만 지우고 지운 개수를 돌려준다."""
+    existing = _col.get(ids=mem_ids)["ids"]
+    if existing:
+        _col.delete(ids=existing)
+    return len(existing)
 
 
 def list_for_user(user_id: str) -> list[str]:

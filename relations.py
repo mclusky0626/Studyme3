@@ -36,6 +36,13 @@ def init() -> None:
                 name TEXT NOT NULL
             )
         """)
+        # 기존 관계에 등장한 유저(unknown: 포함)를 장부에 백필
+        c.execute("""
+            INSERT OR IGNORE INTO users(user_id, name)
+            SELECT user_a_id, user_a_name FROM relations
+            UNION
+            SELECT user_b_id, user_b_name FROM relations
+        """)
 
 
 def remember_user(user_id, name: str) -> None:
