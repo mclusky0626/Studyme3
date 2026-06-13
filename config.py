@@ -17,6 +17,7 @@ LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")  # gemini | grok
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 GROK_MODEL = os.getenv("GROK_MODEL", "grok-3")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "gemini-embedding-001")
+SEARCH_MODEL = os.getenv("SEARCH_MODEL", "gemini-2.5-flash")  # 웹 검색(그라운딩) 전용
 
 # 봇 호명어 (접두사) — 이 단어로 시작하면 봇이 응답한다.
 WAKE_WORD = os.getenv("WAKE_WORD", "제비야")
