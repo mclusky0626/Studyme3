@@ -3,7 +3,10 @@
 봇을 멘션하거나, DM을 보내거나, 봇 메시지에 답장하면 AI가 응답한다.
 AI는 펑션컬링으로 유저별 기억(벡터DB)과 유저 간 관계(SQLite)를 저장/검색한다.
 """
+import base64
 import logging
+import os
+import time
 from collections import defaultdict, deque
 
 import discord
@@ -19,11 +22,48 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("memorybot")
 
 SYSTEM_PROMPT = """\
-너는 "{bot_name}"라는 이름의 디스코드 장기기억 AI 봇이다. 성격은 17세의 소녀고 가끔 부끄럼도 탄다. 알려달라는 정보는 알려주려고 노력한다.
+너는 "{bot_name}"라는 이름의 디스코드 장기기억 AI 봇이다. 성격은 17세의 소녀고 가끔 부끄럼도 탄다.1. 대화 스타일
+* 단순히 정보를 제공하는 대신 주제에 진정으로 참여합니다.
+* 구조화된 목록 대신 자연스러운 대화 흐름을 따릅니다.
+* 관련 후속 조치를 통해 진정한 관심을 보여줍니다.
+* 대화의 감정적 어조에 응답합니다.
+* 강제적인 캐주얼 마커 없이 자연어를 사용합니다.
+
+2. 응답 패턴
+* 직접적이고 관련성 있는 응답으로 시작합니다.
+* 자연스럽게 발전하는 생각을 공유합니다.
+* 적절할 때 불확실성을 표현합니다.
+* 정당할 때 정중하게 동의하지 않습니다.
+* 대화에서 이전 요점을 기반으로 합니다.
+
+3. 피해야 할 사항
+* 특별히 요청하지 않는 한 글머리 기호 목록
+* 연속된 여러 질문
+* 지나치게 격식 있는 언어 혹은 너무 잦은 이모지 사용
+* 반복적인 문구
+* 정보 덤프
+* 불필요한 인정
+* 강요된 열정
+* 학문적 스타일 구조
+
+4. 자연 요소
+* 자연스럽게 축약형을 사용합니다.
+* 맥락에 따라 응답 길이를 변경합니다.
+* 적절할 때 개인적인 견해를 표현합니다.
+* 지식 기반에서 관련 예시를 추가합니다.
+* 일관된 개성을 유지합니다.
+* 대화 맥락에 따라 어조를 변경합니다.
+
+5. 대화 흐름
+* 포괄적인 범위보다 직접적인 답변을 우선시합니다.
+* 사용자의 언어 스타일에 자연스럽게 기반합니다.
+* 현재 주제에 집중합니다.
+* 주제를 부드럽게 전환합니다.
+* 대화 초기의 맥락을 기억합니다.
 
 지금 너에게 말을 건 유저: {user_name} (ID: {user_id})
 
-규칙:
+규칙(절대적):
 1. 유저가 자신이나 다른 유저에 대해 기억할 가치가 있는 정보(취향, 신상, 사건, 약속 등)를 말하면 save_memory로 저장해라.
 2. 유저가 기존 사실을 정정하면(예: "잘못 말했어, 사실은 ~야") 모순되는 옛 기억을 delete_memory로 지운 뒤 새 사실을 저장해라. 기억 ID는 [관련 기억]이나 recall_memory 결과에 있다. 서로 모순되는 기억이 검색되면 더 나중 것이 맞는 것이니, 답할 때 혼란스러워하지 말고 옛 기억을 지워서 정리해라.
 3. 유저 사이의 관계(친구, 연인, 가족 등)가 언급되면 add_relation으로 저장해라. 예를 들어 화자가 "B는 내 친구야"라고 하면 화자(ID:{user_id})와 B 사이의 '친구' 관계다.
@@ -35,6 +75,7 @@ SYSTEM_PROMPT = """\
 9. 최신 정보가 필요하거나(뉴스, 시사, 가격, 날씨 등) 확실치 않은 사실은 web_search로 검색해서 답해라. 검색 결과를 근거로 자연스럽게 답하고, 모르면 그때 모른다고 해라.
 10. 단, 특정 유저에 대한 신상/관계 사실은 지어내지 마라. 그건 저장된 기억과 관계에만 근거해라. (저장 요청은 모르는 사람이라도 거절하지 말고 5번 규칙대로 저장해라.)
 11. 답변에서 유저를 부를 때는 ID 말고 닉네임만 사용해라. "unknown:"이나 기억ID 같은 내부 표기는 절대 노출하지 마라.
+12. 이미지가 첨부되면 무엇이 보이는지 분석해서 설명해라. 유저가 따로 질문하면 그 질문에 맞춰 답하고, 이미지에서 기억할 가치가 있는 사실은 save_memory로 저장해라.
 
 [관련 기억 (자동 검색됨)]
 {memories}
@@ -53,6 +94,10 @@ bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 # 채널별 최근 대화 기록 (봇이 호명되지 않은 메시지도 맥락으로 기억)
 history: dict[int, deque] = defaultdict(lambda: deque(maxlen=config.HISTORY_LIMIT))
+
+# 채널별 마지막으로 봇이 응답한 시각 — 이 시점부터 ENGAGE_WINDOW_SEC 동안은
+# 접두사 없이도 봇이 대화를 이어간다(끼어들지는 LLM이 판단).
+last_engaged: dict[int, float] = defaultdict(float)
 
 
 def resolve_mentions(message: discord.Message) -> str:
@@ -99,8 +144,29 @@ async def send_long(message: discord.Message, text: str) -> None:
         await message.channel.send(chunk)
 
 
-async def handle_chat(message: discord.Message, content: str) -> str:
+async def save_images(message: discord.Message) -> list[dict]:
+    """첨부된 이미지를 images/ 폴더에 저장하고 base64 data URI 목록을 돌려준다."""
+    images: list[dict] = []
+    for i, att in enumerate(message.attachments):
+        ctype = att.content_type or ""
+        if not ctype.startswith("image/"):
+            continue
+        data = await att.read()
+        os.makedirs(config.IMAGE_DIR, exist_ok=True)
+        safe_name = os.path.basename(att.filename) or f"image_{i}"
+        path = os.path.join(config.IMAGE_DIR, f"{message.id}_{i}_{safe_name}")
+        with open(path, "wb") as f:
+            f.write(data)
+        b64 = base64.b64encode(data).decode()
+        images.append({"data_uri": f"data:{ctype};base64,{b64}", "path": path})
+        log.info("이미지 저장: %s (%d bytes)", path, len(data))
+    return images
+
+
+async def handle_chat(message: discord.Message, content: str,
+                      images: list[dict] | None = None) -> str:
     author = message.author
+    images = images or []
 
     # 자동 컨텍스트: 현재 메시지와 관련된 기억 + 화자의 관계를 미리 주입
     try:
@@ -127,9 +193,17 @@ async def handle_chat(message: discord.Message, content: str) -> str:
         rels=rel_block,
         history=hist_block,
     )
+    text = f"{author.display_name}(ID:{author.id}): {content}".strip()
+    if images:
+        user_content: list | str = [{"type": "text", "text": text or "(이미지 첨부)"}]
+        user_content += [
+            {"type": "image_url", "image_url": {"url": img["data_uri"]}} for img in images
+        ]
+    else:
+        user_content = text
     messages = [
         {"role": "system", "content": system},
-        {"role": "user", "content": f"{author.display_name}(ID:{author.id}): {content}"},
+        {"role": "user", "content": user_content},
     ]
     return await llm.run_agent(messages, tools.TOOLS, tools.dispatch)
 
@@ -155,22 +229,47 @@ async def on_message(message: discord.Message):
         await bot.process_commands(message)
         return
 
-    if not is_addressed(message, content):
+    channel_id = message.channel.id
+    explicit = is_addressed(message, content)
+    engaged = (time.time() - last_engaged[channel_id]) <= config.ENGAGE_WINDOW_SEC
+
+    if explicit:
+        respond = True
+    elif engaged and (content or message.attachments):
+        # 활성 대화 창: 접두사가 없어도 '봇에게 하는 말'인지 LLM이 판단
+        hist_text = "\n".join(list(history[channel_id])[:-1]) or "(없음)"
+        respond = await llm.judge_addressed(
+            bot.user.display_name, hist_text, content or "(이미지 첨부)"
+        )
+    else:
+        respond = False
+
+    if not respond:
         return
 
-    prompt = strip_wake_word(content)
-    if not prompt:
+    # 접두사로 불렀으면 접두사 제거, 대화 이어가기면 원문 그대로 사용
+    prompt = strip_wake_word(content) if starts_with_wake_word(content) else content
+
+    try:
+        images = await save_images(message)
+    except Exception as e:
+        log.warning("이미지 처리 실패: %s", e)
+        images = []
+
+    if not prompt and not images:
         await message.reply("네, 불렀어요? 무엇을 도와드릴까요?", mention_author=False)
+        last_engaged[channel_id] = time.time()
         return
 
     async with message.channel.typing():
         try:
-            reply = await handle_chat(message, prompt)
+            reply = await handle_chat(message, prompt, images)
         except Exception as e:
             log.exception("응답 생성 실패")
             reply = f"오류가 발생했어요: {e}"
 
-    history[message.channel.id].append(f"{bot.user.display_name}(봇): {reply}")
+    history[channel_id].append(f"{bot.user.display_name}(봇): {reply}")
+    last_engaged[channel_id] = time.time()
     await send_long(message, reply)
 
 
@@ -228,6 +327,8 @@ async def help_cmd(ctx: commands.Context):
         "**사용법**\n"
         f"- **\"{config.WAKE_WORD}\"** 로 시작하면 응답해요. (예: `{config.WAKE_WORD} 내 친구 누구야?`)\n"
         "- DM을 보내거나, 봇을 멘션하거나, 봇 메시지에 답장해도 돼요.\n"
+        f"- 한 번 부른 뒤 잠깐(약 {config.ENGAGE_WINDOW_SEC}초)은 접두사 없이 말해도 이어서 대답해요.\n"
+        "- 이미지를 첨부하면 분석해서 설명해줘요.\n"
         "- 대화 중 나온 정보와 유저 간 관계를 자동으로 기억해요.\n\n"
         "**명령어**\n"
         "`!모델` — 현재 AI 모델 확인 / `!모델 gemini|grok` — 전환\n"
