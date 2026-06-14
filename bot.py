@@ -89,6 +89,7 @@ SYSTEM_PROMPT = """\
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.reactions = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
@@ -273,6 +274,53 @@ async def on_message(message: discord.Message):
     await send_long(message, reply)
 
 
+@bot.event
+async def on_raw_reaction_add(payload: discord.RawReactionActionEvent):
+    """SAVE_EMOJI로 메시지에 반응하면 그 내용을 장기기억에 저장한다 (LLM 호출 없음)."""
+    if payload.user_id == bot.user.id:
+        return
+    if str(payload.emoji) != config.SAVE_EMOJI:
+        return
+
+    try:
+        channel = bot.get_channel(payload.channel_id) or await bot.fetch_channel(payload.channel_id)
+        message = await channel.fetch_message(payload.message_id)
+    except Exception as e:
+        log.warning("반응 저장: 메시지 조회 실패: %s", e)
+        return
+
+    if message.author.bot:
+        return  # 봇 메시지는 저장하지 않음
+
+    # 이미 저장한 메시지면(봇이 ✅를 달아둠) 중복 저장 방지
+    if any(r.me for r in message.reactions if str(r.emoji) == "✅"):
+        return
+
+    content = resolve_mentions(message)
+    if not content:
+        try:
+            await message.add_reaction("❓")  # 저장할 텍스트가 없음
+        except Exception:
+            pass
+        return
+
+    try:
+        relations.remember_user(message.author.id, message.author.display_name)
+        await memory.save(
+            f"{message.author.display_name}: {content}",
+            message.author.id,
+            message.author.display_name,
+        )
+        await message.add_reaction("✅")
+        log.info("반응 저장 완료: %s -> %r", message.author.display_name, content[:50])
+    except Exception as e:
+        log.exception("반응 저장 실패")
+        try:
+            await message.add_reaction("⚠️")
+        except Exception:
+            pass
+
+
 @bot.command(name="모델")
 async def model_cmd(ctx: commands.Context, name: str = None):
     """!모델 — 현재 모델 확인 / !모델 gemini|grok — 전환"""
@@ -329,6 +377,7 @@ async def help_cmd(ctx: commands.Context):
         "- DM을 보내거나, 봇을 멘션하거나, 봇 메시지에 답장해도 돼요.\n"
         f"- 한 번 부른 뒤 잠깐(약 {config.ENGAGE_WINDOW_SEC}초)은 접두사 없이 말해도 이어서 대답해요.\n"
         "- 이미지를 첨부하면 분석해서 설명해줘요.\n"
+        f"- 아무 메시지에 {config.SAVE_EMOJI} 이모지를 달면 그 내용을 기억으로 저장해요. (저장되면 ✅)\n"
         "- 대화 중 나온 정보와 유저 간 관계를 자동으로 기억해요.\n\n"
         "**명령어**\n"
         "`!모델` — 현재 AI 모델 확인 / `!모델 gemini|grok` — 전환\n"

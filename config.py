@@ -43,3 +43,6 @@ ENGAGE_WINDOW_SEC = int(os.getenv("ENGAGE_WINDOW_SEC", "90"))  # 호명 후 이 
 
 # 첨부 이미지 저장 경로
 IMAGE_DIR = os.getenv("IMAGE_DIR", "images")
+
+# 이 이모지로 메시지에 반응하면 그 메시지 내용을 장기기억에 저장한다.
+SAVE_EMOJI = os.getenv("SAVE_EMOJI", "🧠")
