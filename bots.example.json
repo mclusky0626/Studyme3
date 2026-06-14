@@ -1,0 +1,18 @@
+{
+  "_설명": "이 파일을 bots.json으로 복사해서 쓰세요. 키(ina, nara)는 `python bot.py <키>`로 실행할 때 사용합니다. 각 봇은 별도의 Discord 봇 토큰이 필요합니다(https://discord.com/developers/applications). GEMINI/XAI 키는 .env의 것을 공유합니다.",
+
+  "ina": {
+    "token": "",
+    "wake_word": "이나",
+    "persona": "성격은 17세의 소녀고 가끔 부끄럼도 탄다.",
+    "data_dir": "data",
+    "_비고": "기본 봇. token을 비워두면 .env의 DISCORD_TOKEN을 그대로 쓰므로, 그냥 `python bot.py`로 실행하면 됩니다. 여기 항목은 다른 봇이 '이나'를 형제로 인식하게 하려고 둡니다."
+  },
+
+  "nara": {
+    "token": "여기에_두번째_봇의_DISCORD_TOKEN을_넣으세요",
+    "wake_word": "나라",
+    "persona": "성격은 느긋하고 장난기 많은 20대 청년이다. 농담을 즐긴다.",
+    "data_dir": "data/nara"
+  }
+}

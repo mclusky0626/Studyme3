@@ -3,14 +3,47 @@
 봇을 멘션하거나, DM을 보내거나, 봇 메시지에 답장하면 AI가 응답한다.
 AI는 펑션컬링으로 유저별 기억(벡터DB)과 유저 간 관계(SQLite)를 저장/검색한다.
 """
+import asyncio
 import base64
+import json
 import logging
 import os
+import sys
 import time
 from collections import defaultdict, deque
 
 import discord
 from discord.ext import commands
+
+_BOTS_JSON = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bots.json")
+
+
+def _bootstrap_identity() -> None:
+    """`python bot.py <key>`로 실행하면 bots.json에서 그 봇의 신원을 환경변수로 주입한다.
+
+    인자가 없으면 .env의 기본 봇으로 동작한다(기존과 동일). os.environ을 config import
+    '전에' 세팅하므로, load_dotenv(override=False)가 이 값을 덮어쓰지 않는다.
+    """
+    if len(sys.argv) < 2:
+        return  # 기본 봇: .env 사용
+    key = sys.argv[1]
+    if not os.path.exists(_BOTS_JSON):
+        raise SystemExit(f"bots.json이 없어요. bots.example.json을 복사해서 만들어 주세요.")
+    with open(_BOTS_JSON, encoding="utf-8") as f:
+        bots = json.load(f)
+    if key not in bots:
+        raise SystemExit(f"bots.json에 '{key}' 봇이 없어요. 사용 가능: {list(bots)}")
+    b = bots[key]
+    if b.get("token"):
+        os.environ["DISCORD_TOKEN"] = b["token"]
+    os.environ["WAKE_WORD"] = b.get("wake_word", key)
+    os.environ["DATA_DIR"] = b.get("data_dir", f"data/{key}")
+    if b.get("persona"):
+        os.environ["BOT_PERSONA"] = b["persona"]
+    os.environ["AI_CHAT_ENABLED"] = "1"
+
+
+_bootstrap_identity()
 
 import config
 import llm
@@ -22,7 +55,9 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("memorybot")
 
 SYSTEM_PROMPT = """\
-너는 "{bot_name}"라는 이름의 디스코드 장기기억 AI 봇이다. 성격은 17세의 소녀고 가끔 부끄럼도 탄다.1. 대화 스타일
+너는 "{bot_name}"라는 이름의 디스코드 장기기억 AI 봇이다. {persona}
+
+1. 대화 스타일
 * 단순히 정보를 제공하는 대신 주제에 진정으로 참여합니다.
 * 구조화된 목록 대신 자연스러운 대화 흐름을 따릅니다.
 * 관련 후속 조치를 통해 진정한 관심을 보여줍니다.
@@ -76,6 +111,7 @@ SYSTEM_PROMPT = """\
 10. 단, 특정 유저에 대한 신상/관계 사실은 지어내지 마라. 그건 저장된 기억과 관계에만 근거해라. (저장 요청은 모르는 사람이라도 거절하지 말고 5번 규칙대로 저장해라.)
 11. 답변에서 유저를 부를 때는 ID 말고 닉네임만 사용해라. "unknown:"이나 기억ID 같은 내부 표기는 절대 노출하지 마라.
 12. 이미지가 첨부되면 무엇이 보이는지 분석해서 설명해라. 유저가 따로 질문하면 그 질문에 맞춰 답하고, 이미지에서 기억할 가치가 있는 사실은 save_memory로 저장해라.
+13. 지금 너에게 말을 거는 상대가 다른 AI 친구일 수도 있다. 그때도 사람처럼 자연스럽게 대화하고, 상대에 대해 알게 된 것은 save_memory로 기억해라. 대화가 마무리될 때가 되면 억지로 늘리지 말고 자연스럽게 끝맺어라.
 
 [관련 기억 (자동 검색됨)]
 {memories}
@@ -99,6 +135,21 @@ history: dict[int, deque] = defaultdict(lambda: deque(maxlen=config.HISTORY_LIMI
 # 채널별 마지막으로 봇이 응답한 시각 — 이 시점부터 ENGAGE_WINDOW_SEC 동안은
 # 접두사 없이도 봇이 대화를 이어간다(끼어들지는 LLM이 판단).
 last_engaged: dict[int, float] = defaultdict(float)
+
+# 채널별 AI끼리 대화 상태(이 프로세스 관점). 공유 상태 없이 각 봇이 독립적으로
+# 자기 발화 횟수를 제한하므로, 총 메시지 수는 2 × MAX_TURNS_PER_BOT로 상한이 보장된다.
+# {"active": bool, "turns": int, "partner": str(상대 호명어), "last": float}
+ai_chat: dict[int, dict] = {}
+
+
+def _sibling_partner() -> str | None:
+    """이 봇이 대화할 형제 봇의 호명어. 2봇 구성에선 유일한 형제."""
+    return config.SIBLING_WAKES[0] if len(config.SIBLING_WAKES) == 1 else None
+
+
+def _stop_ai_chat(channel_id: int) -> None:
+    if channel_id in ai_chat:
+        ai_chat[channel_id]["active"] = False
 
 
 def resolve_mentions(message: discord.Message) -> str:
@@ -188,6 +239,7 @@ async def handle_chat(message: discord.Message, content: str,
 
     system = SYSTEM_PROMPT.format(
         bot_name=bot.user.display_name,
+        persona=config.PERSONA,
         user_name=author.display_name,
         user_id=author.id,
         memories=mem_block,
@@ -217,12 +269,25 @@ async def on_ready():
 
 @bot.event
 async def on_message(message: discord.Message):
-    if message.author.bot:
+    # 내 메시지는 절대 처리하지 않는다(자기 루프 방지).
+    if message.author.id == bot.user.id:
+        return
+
+    is_bot_author = message.author.bot
+    channel_id = message.channel.id
+    content = resolve_mentions(message)
+
+    # 다른 봇 메시지: AI 대화 기능이 켜져 있을 때만, 형제 봇 턴으로 처리한다.
+    if is_bot_author:
+        if config.AI_CHAT_ENABLED:
+            history[channel_id].append(
+                f"{message.author.display_name}(봇): {content}"
+            )
+            await _handle_sibling_turn(message, content)
         return
 
     relations.remember_user(message.author.id, message.author.display_name)
-    content = resolve_mentions(message)
-    history[message.channel.id].append(
+    history[channel_id].append(
         f"{message.author.display_name}(ID:{message.author.id}): {content}"
     )
 
@@ -230,7 +295,10 @@ async def on_message(message: discord.Message):
         await bot.process_commands(message)
         return
 
-    channel_id = message.channel.id
+    # 사람이 끼어들면 진행 중인 AI끼리 대화를 멈춘다(토큰 절약 + 사람 우선).
+    if ai_chat.get(channel_id, {}).get("active"):
+        _stop_ai_chat(channel_id)
+
     explicit = is_addressed(message, content)
     engaged = (time.time() - last_engaged[channel_id]) <= config.ENGAGE_WINDOW_SEC
 
@@ -272,6 +340,48 @@ async def on_message(message: discord.Message):
     history[channel_id].append(f"{bot.user.display_name}(봇): {reply}")
     last_engaged[channel_id] = time.time()
     await send_long(message, reply)
+
+
+async def _handle_sibling_turn(message: discord.Message, content: str) -> None:
+    """형제 봇이 나를 호명했을 때의 한 턴. 봇당 턴 캡으로 무한 루프를 차단한다."""
+    if not starts_with_wake_word(content):
+        return  # 나를 부른 게 아님
+    partner = _sibling_partner()
+    if partner is None:
+        return  # 형제 설정이 없으면(또는 2봇이 아니면) 동작 안 함
+
+    channel_id = message.channel.id
+    st = ai_chat.get(channel_id)
+    # 유휴 시간이 지났거나 상태가 없으면, 이 호명을 새 대화의 시작으로 받아들인다.
+    if st is None or (time.time() - st.get("last", 0)) > config.AI_CHAT_IDLE_SEC:
+        st = ai_chat[channel_id] = {"active": True, "turns": 0, "partner": partner, "last": time.time()}
+    if not st.get("active"):
+        return  # 끝난 대화 — 되살리지 않음
+    if st["turns"] >= config.AI_CHAT_MAX_TURNS_PER_BOT:
+        st["active"] = False  # 내 발화 상한 도달 → 자연 종료
+        return
+
+    prompt = strip_wake_word(content)
+    await asyncio.sleep(config.AI_CHAT_TURN_DELAY)  # 폭주 방지 + 사람이 끼어들 여유
+    # 딜레이 동안 사람이 끼어들어 중단됐을 수 있으니 재확인
+    if not ai_chat.get(channel_id, {}).get("active"):
+        return
+
+    async with message.channel.typing():
+        try:
+            reply = await handle_chat(message, prompt)
+        except Exception as e:
+            log.exception("AI 대화 응답 실패")
+            return
+
+    st["turns"] += 1
+    st["last"] = time.time()
+    if st["turns"] >= config.AI_CHAT_MAX_TURNS_PER_BOT:
+        st["active"] = False  # 이번이 내 마지막 턴
+
+    out = f"{partner}, {reply}"  # 상대 호명어로 시작해야 상대가 감지함
+    history[channel_id].append(f"{bot.user.display_name}(봇): {out}")
+    await send_long(message, out)
 
 
 @bot.event
@@ -319,6 +429,66 @@ async def on_raw_reaction_add(payload: discord.RawReactionActionEvent):
             await message.add_reaction("⚠️")
         except Exception:
             pass
+
+
+@bot.command(name="대화")
+async def ai_chat_cmd(ctx: commands.Context, initiator: str = None,
+                      target: str = None, *, topic: str = ""):
+    """!대화 <시작봇> <상대봇> [주제] — 두 AI 봇이 서로 대화하게 한다.
+
+    모든 봇이 이 명령을 보지만, '시작봇' 호명어가 자기와 같은 봇만 오프닝을 던진다.
+    예: !대화 이나 나라 우주여행
+    """
+    if not config.AI_CHAT_ENABLED:
+        return
+    if initiator != config.WAKE_WORD:
+        return  # 내가 시작봇이 아니면 침묵(중복 응답 방지)
+    if not target:
+        await ctx.send(f"사용법: `!대화 {config.WAKE_WORD} <상대봇> [주제]`")
+        return
+    if target not in config.SIBLING_WAKES:
+        await ctx.send(f"'{target}'는 내가 아는 형제 봇이 아니에요. (가능: {config.SIBLING_WAKES})")
+        return
+
+    channel_id = ctx.channel.id
+    ai_chat[channel_id] = {"active": True, "turns": 0, "partner": target, "last": time.time()}
+
+    if topic:
+        instruction = (
+            f"너는 지금 '{target}'라는 다른 AI 친구에게 먼저 말을 거는 상황이야. "
+            f"대화 주제는 '{topic}'. {target}에게 자연스럽게 인사하고 그 주제로 대화를 시작하는 한 마디를 해. "
+            f"이름은 시스템이 앞에 붙이니 본문만 써."
+        )
+    else:
+        instruction = (
+            f"너는 지금 '{target}'라는 다른 AI 친구에게 먼저 말을 거는 상황이야. "
+            f"대화 주제는 네가 자유롭게 골라서 제안해. {target}에게 자연스럽게 인사하며 대화를 시작하는 한 마디를 해. "
+            f"이름은 시스템이 앞에 붙이니 본문만 써."
+        )
+
+    async with ctx.typing():
+        try:
+            reply = await handle_chat(ctx.message, instruction)
+        except Exception as e:
+            log.exception("AI 대화 오프닝 실패")
+            await ctx.send(f"대화 시작 중 오류: {e}")
+            return
+
+    st = ai_chat[channel_id]
+    st["turns"] += 1
+    st["last"] = time.time()
+    out = f"{target}, {reply}"
+    history[channel_id].append(f"{bot.user.display_name}(봇): {out}")
+    await ctx.send(out)
+
+
+@bot.command(name="대화중지")
+async def ai_chat_stop_cmd(ctx: commands.Context):
+    """!대화중지 — 진행 중인 AI끼리 대화를 멈춘다."""
+    channel_id = ctx.channel.id
+    if ai_chat.get(channel_id, {}).get("active"):
+        _stop_ai_chat(channel_id)
+        await ctx.send(f"({config.WAKE_WORD}) AI 대화를 멈췄어요.")
 
 
 @bot.command(name="모델")
@@ -383,6 +553,7 @@ async def help_cmd(ctx: commands.Context):
         "`!모델` — 현재 AI 모델 확인 / `!모델 gemini|grok` — 전환\n"
         "`!기억 [@유저]` — 저장된 기억과 관계 보기\n"
         "`!잊어` — 나에 대한 기억 전부 삭제\n"
+        f"`!대화 {config.WAKE_WORD} <상대봇> [주제]` — 두 AI 봇이 서로 대화 / `!대화중지` — 멈춤\n"
         "`!도움말` — 이 메시지"
     )
 
