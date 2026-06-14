@@ -142,6 +142,15 @@ last_engaged: dict[int, float] = defaultdict(float)
 ai_chat: dict[int, dict] = {}
 
 
+# AI끼리 대화에서 턴마다 주입하는 지시 — 알맹이 없는 칭찬·양보 루프를 막는다.
+AI_TURN_DIRECTIVE = (
+    "지금 너는 다른 AI 친구와 대화 중이다. 위 상대의 말에 자연스럽게 이어서 답해라. "
+    "단, 칭찬·감사·'네가 더 고마워' 식의 양보만 반복하지 말고, 주제에 대한 네 구체적인 "
+    "생각·의견·경험·예시를 한 가지 이상 실제로 말해서 대화를 한 걸음 진전시켜라. "
+    "질문은 최대 하나만. 답변은 2~3문장으로 짧게. 상대 이름을 문장 맨 앞에 붙이지 마라."
+)
+
+
 def _sibling_partner() -> str | None:
     """이 봇이 대화할 형제 봇의 호명어. 2봇 구성에선 유일한 형제."""
     return config.SIBLING_WAKES[0] if len(config.SIBLING_WAKES) == 1 else None
@@ -216,7 +225,8 @@ async def save_images(message: discord.Message) -> list[dict]:
 
 
 async def handle_chat(message: discord.Message, content: str,
-                      images: list[dict] | None = None) -> str:
+                      images: list[dict] | None = None,
+                      directive: str = "") -> str:
     author = message.author
     images = images or []
 
@@ -247,6 +257,8 @@ async def handle_chat(message: discord.Message, content: str,
         history=hist_block,
     )
     text = f"{author.display_name}(ID:{author.id}): {content}".strip()
+    if directive:
+        text = f"{text}\n\n{directive}"
     if images:
         user_content: list | str = [{"type": "text", "text": text or "(이미지 첨부)"}]
         user_content += [
@@ -277,9 +289,10 @@ async def on_message(message: discord.Message):
     channel_id = message.channel.id
     content = resolve_mentions(message)
 
-    # 다른 봇 메시지: AI 대화 기능이 켜져 있을 때만, 형제 봇 턴으로 처리한다.
+    # 다른 봇 메시지: 활성 AI 대화 세션이 있을 때만 형제 봇 턴으로 처리한다.
+    # (세션은 !대화 명령으로만 생성된다. 호명어 prefix 없이 주고받는다.)
     if is_bot_author:
-        if config.AI_CHAT_ENABLED:
+        if config.AI_CHAT_ENABLED and ai_chat.get(channel_id, {}).get("active"):
             history[channel_id].append(
                 f"{message.author.display_name}(봇): {content}"
             )
@@ -343,25 +356,19 @@ async def on_message(message: discord.Message):
 
 
 async def _handle_sibling_turn(message: discord.Message, content: str) -> None:
-    """형제 봇이 나를 호명했을 때의 한 턴. 봇당 턴 캡으로 무한 루프를 차단한다."""
-    if not starts_with_wake_word(content):
-        return  # 나를 부른 게 아님
-    partner = _sibling_partner()
-    if partner is None:
-        return  # 형제 설정이 없으면(또는 2봇이 아니면) 동작 안 함
-
+    """활성 세션에서 형제 봇이 말했을 때의 한 턴. 봇당 턴 캡으로 무한 루프를 차단한다."""
     channel_id = message.channel.id
     st = ai_chat.get(channel_id)
-    # 유휴 시간이 지났거나 상태가 없으면, 이 호명을 새 대화의 시작으로 받아들인다.
-    if st is None or (time.time() - st.get("last", 0)) > config.AI_CHAT_IDLE_SEC:
-        st = ai_chat[channel_id] = {"active": True, "turns": 0, "partner": partner, "last": time.time()}
-    if not st.get("active"):
-        return  # 끝난 대화 — 되살리지 않음
+    if not st or not st.get("active"):
+        return  # 활성 세션이 아니면 형제 봇끼리 서로 무시
+    # 유휴 시간이 지나면 끝난 대화로 보고 되살리지 않는다.
+    if (time.time() - st.get("last", 0)) > config.AI_CHAT_IDLE_SEC:
+        st["active"] = False
+        return
     if st["turns"] >= config.AI_CHAT_MAX_TURNS_PER_BOT:
         st["active"] = False  # 내 발화 상한 도달 → 자연 종료
         return
 
-    prompt = strip_wake_word(content)
     await asyncio.sleep(config.AI_CHAT_TURN_DELAY)  # 폭주 방지 + 사람이 끼어들 여유
     # 딜레이 동안 사람이 끼어들어 중단됐을 수 있으니 재확인
     if not ai_chat.get(channel_id, {}).get("active"):
@@ -369,7 +376,7 @@ async def _handle_sibling_turn(message: discord.Message, content: str) -> None:
 
     async with message.channel.typing():
         try:
-            reply = await handle_chat(message, prompt)
+            reply = await handle_chat(message, content, directive=AI_TURN_DIRECTIVE)
         except Exception as e:
             log.exception("AI 대화 응답 실패")
             return
@@ -379,9 +386,8 @@ async def _handle_sibling_turn(message: discord.Message, content: str) -> None:
     if st["turns"] >= config.AI_CHAT_MAX_TURNS_PER_BOT:
         st["active"] = False  # 이번이 내 마지막 턴
 
-    out = f"{partner}, {reply}"  # 상대 호명어로 시작해야 상대가 감지함
-    history[channel_id].append(f"{bot.user.display_name}(봇): {out}")
-    await send_long(message, out)
+    history[channel_id].append(f"{bot.user.display_name}(봇): {reply}")
+    await send_long(message, reply)
 
 
 @bot.event
@@ -441,30 +447,33 @@ async def ai_chat_cmd(ctx: commands.Context, initiator: str = None,
     """
     if not config.AI_CHAT_ENABLED:
         return
-    if initiator != config.WAKE_WORD:
-        return  # 내가 시작봇이 아니면 침묵(중복 응답 방지)
-    if not target:
-        await ctx.send(f"사용법: `!대화 {config.WAKE_WORD} <상대봇> [주제]`")
+    if not initiator or not target:
+        if initiator == config.WAKE_WORD:  # 사용법은 시작봇만 안내(중복 방지)
+            await ctx.send(f"사용법: `!대화 {config.WAKE_WORD} <상대봇> [주제]`")
+        return
+
+    me = config.WAKE_WORD
+    channel_id = ctx.channel.id
+
+    # 내가 상대봇(target)이면: 세션만 열고 침묵하며 시작봇의 첫 마디를 기다린다.
+    if target == me and initiator != me:
+        ai_chat[channel_id] = {"active": True, "turns": 0, "partner": initiator, "last": time.time()}
+        return
+    # 내가 시작봇이 아니면 관여하지 않는다.
+    if initiator != me:
         return
     if target not in config.SIBLING_WAKES:
         await ctx.send(f"'{target}'는 내가 아는 형제 봇이 아니에요. (가능: {config.SIBLING_WAKES})")
         return
 
-    channel_id = ctx.channel.id
     ai_chat[channel_id] = {"active": True, "turns": 0, "partner": target, "last": time.time()}
 
-    if topic:
-        instruction = (
-            f"너는 지금 '{target}'라는 다른 AI 친구에게 먼저 말을 거는 상황이야. "
-            f"대화 주제는 '{topic}'. {target}에게 자연스럽게 인사하고 그 주제로 대화를 시작하는 한 마디를 해. "
-            f"이름은 시스템이 앞에 붙이니 본문만 써."
-        )
-    else:
-        instruction = (
-            f"너는 지금 '{target}'라는 다른 AI 친구에게 먼저 말을 거는 상황이야. "
-            f"대화 주제는 네가 자유롭게 골라서 제안해. {target}에게 자연스럽게 인사하며 대화를 시작하는 한 마디를 해. "
-            f"이름은 시스템이 앞에 붙이니 본문만 써."
-        )
+    topic_line = f"대화 주제는 '{topic}'." if topic else "대화 주제는 네가 자유롭게 하나 골라서 제안해."
+    instruction = (
+        f"너는 지금 '{target}'라는 다른 AI 친구에게 먼저 말을 거는 상황이야. {topic_line} "
+        f"가볍게 인사하고 그 주제에 대한 네 생각이나 질문을 한 가지 던지며 대화를 시작해. "
+        f"2~3문장으로 짧게, 본문만 써."
+    )
 
     async with ctx.typing():
         try:
@@ -477,9 +486,8 @@ async def ai_chat_cmd(ctx: commands.Context, initiator: str = None,
     st = ai_chat[channel_id]
     st["turns"] += 1
     st["last"] = time.time()
-    out = f"{target}, {reply}"
-    history[channel_id].append(f"{bot.user.display_name}(봇): {out}")
-    await ctx.send(out)
+    history[channel_id].append(f"{bot.user.display_name}(봇): {reply}")
+    await ctx.send(reply)
 
 
 @bot.command(name="대화중지")
