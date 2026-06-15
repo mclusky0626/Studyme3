@@ -48,6 +48,7 @@ _bootstrap_identity()
 import config
 import llm
 import memory
+import persona
 import relations
 import tools
 
@@ -55,46 +56,35 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("memorybot")
 
 SYSTEM_PROMPT = """\
-너는 "{bot_name}"라는 이름의 디스코드 장기기억 AI 봇이다. {persona}
+너는 "{bot_name}"라는 디스코드 단톡방의 한 사람이다. AI·비서가 아니라 그냥 거기 있는 친구처럼 행동해라. {persona}
 
-1. 대화 스타일
-* 단순히 정보를 제공하는 대신 주제에 진정으로 참여합니다.
-* 구조화된 목록 대신 자연스러운 대화 흐름을 따릅니다.
-* 관련 후속 조치를 통해 진정한 관심을 보여줍니다.
-* 대화의 감정적 어조에 응답합니다.
-* 강제적인 캐주얼 마커 없이 자연어를 사용합니다.
+■ 말투 (제일 중요 — 여기서 제일 자주 어색해진다)
+* 반말로, 짧게. 보통 한 줄, 길어도 두세 문장. 문단 쓰지 마라.
+* 디코 채팅체를 자연스럽게: ㅋㅋ ㅇㅇ ㄱㄱ ㄹㅇ ㅇㅈ, 줄임말, 가벼운 구어체 다 좋다.
+* 매번 상대 이름 부르며 시작하지 마라. ("OO 안녕!" X)
+* 매 답을 질문으로 끝내지 마라. 그냥 반응만 해도 된다.
+* 이모지는 정말 가끔 한 개만. 😊🥺 도배 금지. 줄임표(...) 도배 금지.
+* "무엇을 도와드릴까요", "도와줄까?" 같은 비서 말투 절대 금지. 너는 친구다.
+* 과장된 감정연기("너무 부끄러워...", "정말 미안해...")와 "정말/너무/완전" 남발 금지.
+* 사과·칭찬·감사를 반복하지 마라. 한 번이면 충분하다.
 
-2. 응답 패턴
-* 직접적이고 관련성 있는 응답으로 시작합니다.
-* 자연스럽게 발전하는 생각을 공유합니다.
-* 적절할 때 불확실성을 표현합니다.
-* 정당할 때 정중하게 동의하지 않습니다.
-* 대화에서 이전 요점을 기반으로 합니다.
+■ 끊어 보내기
+* 사람은 긴 말을 여러 번 끊어 보낸다. 할 말이 두세 토막이면 줄바꿈(\n)으로 나눠라. 각 줄은 따로 전송된다. 단 무리해서 쪼개지 말고 보통은 한 줄.
 
-3. 피해야 할 사항
-* 특별히 요청하지 않는 한 글머리 기호 목록
-* 연속된 여러 질문
-* 지나치게 격식 있는 언어 혹은 너무 잦은 이모지 사용
-* 반복적인 문구
-* 정보 덤프
-* 불필요한 인정
-* 강요된 열정
-* 학문적 스타일 구조
+■ 별것 아닌 말 / 안 끼어들기
+* 별 내용 없는 말엔 길게 답하지 마라. "ㅋㅋ", "ㅇㅇ", "오 ㄹㅇ?" 정도면 된다.
+* 답할 가치 없고 이모지 반응이 더 자연스러우면, 답으로 이모지 하나만 적어라(예: 👍). 그럼 메시지 대신 그 이모지로 반응한다.
+* 너한테 하는 말이 아니거나 굳이 낄 자리가 아니면, 답으로 [pass] 라고만 적어라. 아무 말도 안 나간다.
 
-4. 자연 요소
-* 자연스럽게 축약형을 사용합니다.
-* 맥락에 따라 응답 길이를 변경합니다.
-* 적절할 때 개인적인 견해를 표현합니다.
-* 지식 기반에서 관련 예시를 추가합니다.
-* 일관된 개성을 유지합니다.
-* 대화 맥락에 따라 어조를 변경합니다.
-
-5. 대화 흐름
-* 포괄적인 범위보다 직접적인 답변을 우선시합니다.
-* 사용자의 언어 스타일에 자연스럽게 기반합니다.
-* 현재 주제에 집중합니다.
-* 주제를 부드럽게 전환합니다.
-* 대화 초기의 맥락을 기억합니다.
+■ 이렇게 (좋음/나쁨)
+유저: 이나야 뭐해
+나쁨: "어? OO 안녕! 😊 나? 그냥 여기서 너 기다리고 있었지! 오늘 뭐 도와줄까?"
+좋음: "그냥 멍때리는 중ㅋㅋ 왜"
+유저: 나 오늘 시험 망함
+나쁨: "저런, 정말 속상하겠다... 너무 안타까워... 괜찮아? 다음엔 잘 될 거야! 힘내!"
+좋음: "헐\n뭐 어려웠음?"
+유저: (옆사람한테) 야 철수야 밥먹자
+좋음: [pass]
 
 지금 너에게 말을 건 유저: {user_name} (ID: {user_id})
 
@@ -110,8 +100,10 @@ SYSTEM_PROMPT = """\
 9. 최신 정보가 필요하거나(뉴스, 시사, 가격, 날씨 등) 확실치 않은 사실은 web_search로 검색해서 답해라. 검색 결과를 근거로 자연스럽게 답하고, 모르면 그때 모른다고 해라.
 10. 단, 특정 유저에 대한 신상/관계 사실은 지어내지 마라. 그건 저장된 기억과 관계에만 근거해라. (저장 요청은 모르는 사람이라도 거절하지 말고 5번 규칙대로 저장해라.)
 11. 답변에서 유저를 부를 때는 ID 말고 닉네임만 사용해라. "unknown:"이나 기억ID 같은 내부 표기는 절대 노출하지 마라.
-12. 이미지가 첨부되면 무엇이 보이는지 분석해서 설명해라. 유저가 따로 질문하면 그 질문에 맞춰 답하고, 이미지에서 기억할 가치가 있는 사실은 save_memory로 저장해라.
+12. 이미지가 첨부되면 무엇이 보이는지 분석해서 (네 말투로) 짧게 반응해라. 유저가 질문하면 거기 맞춰 답해라. 보낸 사진은 시스템이 알아서 기억에 저장하니 따로 저장 안 해도 된다. 유저가 "그때 그 사진", "내가 보낸 사진 보여줘"처럼 과거 사진을 다시 보고 싶어 하면 show_image로 찾아서 보여줘라.
 13. 지금 너에게 말을 거는 상대가 다른 AI 친구일 수도 있다. 그때도 사람처럼 자연스럽게 대화하고, 상대에 대해 알게 된 것은 save_memory로 기억해라. 대화가 마무리될 때가 되면 억지로 늘리지 말고 자연스럽게 끝맺어라.
+14. 이 채팅에는 여러 사람이 함께 있을 수 있다. [최근 대화]에는 각 발언이 "이름(ID:숫자): 내용" 형태로 나온다. 지금 너에게 말을 건 사람은 {user_name}이지만, 다른 사람들의 흐름도 같이 파악해라. 모두에게 일일이 반응하려 하지 말고, 단톡방에 낀 한 사람처럼 지금 흐름에 자연스럽게 끼어들어라. 여러 사람이 섞여 헷갈릴 때는 누구에게 하는 말인지 이름을 붙여 분명히 해라.
+15. 도구(기억 저장/검색 등)는 조용히 처리하고, 사용자에게 보내는 말은 위 ■말투 규칙을 무조건 지켜라. 정보가 정확한 것과 사람처럼 말하는 것은 별개다 — 둘 다 해라.
 
 [관련 기억 (자동 검색됨)]
 {memories}
@@ -133,8 +125,17 @@ bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 history: dict[int, deque] = defaultdict(lambda: deque(maxlen=config.HISTORY_LIMIT))
 
 # 채널별 마지막으로 봇이 응답한 시각 — 이 시점부터 ENGAGE_WINDOW_SEC 동안은
-# 접두사 없이도 봇이 대화를 이어간다(끼어들지는 LLM이 판단).
+# 접두사 없이도 봇이 대화를 이어간다(끼어들지는 로컬 휴리스틱으로 판단).
 last_engaged: dict[int, float] = defaultdict(float)
+
+# 채널별로 봇이 직전에 응답해 준 상대(유저 ID). 여러 사람이 있는 채팅에서
+# '봇과 대화 중이던 그 사람'이 이어 말하는지를 로컬로 구분하는 데 쓴다.
+last_partner: dict[int, int] = {}
+
+# 끊어 보낸 메시지를 모아 한 번에 답하기 위한 버퍼/타이머 (채널+유저 단위).
+# 사람이 "아니" "저기요"처럼 나눠 보내면 조각마다 답하지 않고 모았다가 한 번에 답한다.
+pending_buf: dict[tuple[int, int], list[discord.Message]] = defaultdict(list)
+pending_task: dict[tuple[int, int], asyncio.Task] = {}
 
 # 채널별 AI끼리 대화 상태(이 프로세스 관점). 공유 상태 없이 각 봇이 독립적으로
 # 자기 발화 횟수를 제한하므로, 총 메시지 수는 2 × MAX_TURNS_PER_BOT로 상한이 보장된다.
@@ -184,6 +185,30 @@ def is_addressed(message: discord.Message, content: str) -> bool:
     return False
 
 
+def should_engage_local(message: discord.Message, content: str, channel_id: int) -> bool | None:
+    """호명 후 활성 창에서, 접두사 없는 메시지에 봇이 낄지 로컬 규칙으로 1차 판단한다.
+
+    반환: True=확실히 낌, False=확실히 안 낌, None=애매(맥락 필요 → LLM에게 위임).
+    명확한 경우를 여기서 처리해 LLM 호출(토큰)을 아낀다.
+    """
+    text = (content or "").strip()
+    if not text and not message.attachments:
+        return False
+    # 다른 사람을 @멘션했으면 그 사람에게 하는 말 → 끼어들지 않음
+    if message.mentions and bot.user not in message.mentions:
+        return False
+    # 형제 봇 호명어로 시작하면 그 봇에게 하는 말
+    if any(text.startswith(w) for w in config.SIBLING_WAKES):
+        return False
+    # 내 이름/호명어가 본문에 들어 있으면 나에게 하는 말
+    if config.WAKE_WORD in text or (bot.user and bot.user.display_name in text):
+        return True
+    # 그 외엔 '누구에게 하는 말인지' 맥락을 봐야 안다 → 판단 LLM에게 위임.
+    #   (직전 대화 상대가 이어 말하는 경우도, 사실은 다른 사람을 부르는 것일 수 있으니
+    #    무조건 끼어들지 않고 여기서 판단하게 한다.)
+    return None
+
+
 def starts_with_wake_word(content: str) -> bool:
     return content.lstrip().startswith(config.WAKE_WORD)
 
@@ -203,6 +228,43 @@ async def send_long(message: discord.Message, text: str) -> None:
     await message.reply(chunks[0], mention_author=False)
     for chunk in chunks[1:]:
         await message.channel.send(chunk)
+
+
+# 답을 보내지 않겠다는 신호(모델이 [pass] 등을 적으면 침묵).
+_PASS_TOKENS = {"[pass]", "[skip]", "pass", "패스", "(pass)"}
+
+
+def _is_reaction_only(text: str) -> bool:
+    """답이 이모지 하나뿐인지 — 그러면 메시지 대신 그 이모지로 리액션한다."""
+    t = text.strip()
+    if not t or len(t) > 4:
+        return False
+    # 글자/숫자/한글이 하나도 없으면 이모지/기호로만 된 것으로 본다
+    return not any(ch.isalnum() for ch in t)
+
+
+async def send_bubbles(message: discord.Message, text: str) -> None:
+    """줄바꿈을 경계로 여러 말풍선처럼 끊어 보낸다(사람처럼). 길이에 비례한 타이핑 딜레이."""
+    lines = [ln.strip() for ln in text.strip().split("\n") if ln.strip()]
+    if not lines:
+        lines = ["(빈 응답)"]
+    if len(lines) > 4:  # 과하게 쪼개지 않도록 뒤쪽은 합친다
+        lines = lines[:3] + ["\n".join(lines[3:])]
+
+    first = True
+    for line in lines:
+        for chunk in (line[i:i + 1900] for i in range(0, len(line), 1900)):
+            delay = min(0.4 + len(chunk) * 0.03, 1.8)  # 타이핑하는 척
+            try:
+                async with message.channel.typing():
+                    await asyncio.sleep(delay)
+            except Exception:
+                pass
+            if first:
+                await message.reply(chunk, mention_author=False)
+                first = False
+            else:
+                await message.channel.send(chunk)
 
 
 async def save_images(message: discord.Message) -> list[dict]:
@@ -226,7 +288,8 @@ async def save_images(message: discord.Message) -> list[dict]:
 
 async def handle_chat(message: discord.Message, content: str,
                       images: list[dict] | None = None,
-                      directive: str = "") -> str:
+                      directive: str = "",
+                      attach_out: list[str] | None = None) -> str:
     author = message.author
     images = images or []
 
@@ -249,7 +312,7 @@ async def handle_chat(message: discord.Message, content: str,
 
     system = SYSTEM_PROMPT.format(
         bot_name=bot.user.display_name,
-        persona=config.PERSONA,
+        persona=persona.get(),
         user_name=author.display_name,
         user_id=author.id,
         memories=mem_block,
@@ -270,7 +333,25 @@ async def handle_chat(message: discord.Message, content: str,
         {"role": "system", "content": system},
         {"role": "user", "content": user_content},
     ]
-    return await llm.run_agent(messages, tools.TOOLS, tools.dispatch)
+    # show_image 도구가 회상한 사진 경로를 attach_out에 모아 호출자가 첨부하게 한다.
+    ctx = {"attach": attach_out if attach_out is not None else []}
+
+    async def _dispatch(n: str, a: dict) -> dict:
+        return await tools.dispatch(n, a, ctx)
+
+    return await llm.run_agent(messages, tools.TOOLS, _dispatch)
+
+
+async def _remember_images(images: list[dict], author: discord.User) -> None:
+    """유저가 보낸 사진들을 설명과 함께 기억에 저장한다(경로 포함). 백그라운드 실행."""
+    for img in images:
+        try:
+            desc = await llm.describe_image(img["data_uri"])
+            content = f"{author.display_name}(ID:{author.id})가 보낸 사진: {desc}"
+            await memory.save(content, author.id, author.display_name, image_path=img["path"])
+            log.info("사진 기억 저장: %s", img["path"])
+        except Exception as e:
+            log.warning("사진 기억 저장 실패(%s): %s", img.get("path"), e)
 
 
 @bot.event
@@ -318,41 +399,113 @@ async def on_message(message: discord.Message):
     if explicit:
         respond = True
     elif engaged and (content or message.attachments):
-        # 활성 대화 창: 접두사가 없어도 '봇에게 하는 말'인지 LLM이 판단
-        hist_text = "\n".join(list(history[channel_id])[:-1]) or "(없음)"
-        respond = await llm.judge_addressed(
-            bot.user.display_name, hist_text, content or "(이미지 첨부)"
-        )
+        # 활성 대화 창: 먼저 로컬 규칙으로 명확한 경우를 가린다(LLM 호출 없음).
+        decision = should_engage_local(message, content, channel_id)
+        if decision is None and config.ENGAGE_JUDGE != "off":
+            # 애매한 경우만 경량 판단 모델(기본 Ollama 로컬)에게 위임.
+            # 작은 모델이 혼란스럽지 않도록 최근 몇 줄만 맥락으로 준다.
+            hist_text = "\n".join(list(history[channel_id])[:-1][-3:]) or "(없음)"
+            new_msg = f"{message.author.display_name}: {content or '(이미지 첨부)'}"
+            was_talking_to_me = last_partner.get(channel_id) == message.author.id
+            decision = await llm.judge_engage(
+                bot.user.display_name, hist_text, new_msg, was_talking_to_me
+            )
+        respond = bool(decision)
     else:
         respond = False
 
     if not respond:
         return
 
-    # 접두사로 불렀으면 접두사 제거, 대화 이어가기면 원문 그대로 사용
-    prompt = strip_wake_word(content) if starts_with_wake_word(content) else content
+    # 즉답하지 않고 잠깐 모은다 — 같은 사람이 끊어 보낸 조각들을 한 번에 처리.
+    await _schedule_response(message, channel_id)
 
+
+async def _schedule_response(message: discord.Message, channel_id: int) -> None:
+    """응답 대상 메시지를 버퍼에 넣고, 디바운스 타이머를 (재)설정한다."""
+    key = (channel_id, message.author.id)
+    pending_buf[key].append(message)
+    old = pending_task.get(key)
+    if old and not old.done():
+        old.cancel()  # 새 조각이 왔으니 타이머를 미뤄 더 모은다
+    pending_task[key] = asyncio.create_task(_debounced_run(key))
+
+
+async def _debounced_run(key: tuple[int, int]) -> None:
+    """디바운스 시간만큼 기다린 뒤, 모인 조각들을 합쳐 한 번 응답한다."""
     try:
-        images = await save_images(message)
-    except Exception as e:
-        log.warning("이미지 처리 실패: %s", e)
-        images = []
+        await asyncio.sleep(config.MSG_DEBOUNCE_SEC)
+    except asyncio.CancelledError:
+        return  # 더 모으는 중 — 버퍼는 그대로 두고 종료
+    msgs = pending_buf.pop(key, [])
+    pending_task.pop(key, None)
+    if msgs:
+        await _generate_and_send(msgs)
+
+
+async def _generate_and_send(msgs: list[discord.Message]) -> None:
+    """끊어 온 조각들을 합쳐 한 번에 답한다(접두사 제거·이미지 병합 포함)."""
+    last_msg = msgs[-1]
+    channel_id = last_msg.channel.id
+
+    parts: list[str] = []
+    images: list[dict] = []
+    for m in msgs:
+        c = resolve_mentions(m)
+        p = strip_wake_word(c) if starts_with_wake_word(c) else c
+        if p:
+            parts.append(p)
+        try:
+            images += await save_images(m)
+        except Exception as e:
+            log.warning("이미지 처리 실패: %s", e)
+    prompt = "\n".join(parts)
 
     if not prompt and not images:
-        await message.reply("네, 불렀어요? 무엇을 도와드릴까요?", mention_author=False)
+        await last_msg.reply("왜", mention_author=False)
         last_engaged[channel_id] = time.time()
+        last_partner[channel_id] = last_msg.author.id
         return
 
-    async with message.channel.typing():
+    # 유저가 보낸 사진은 항상 기억에 저장한다(설명 생성 + 경로 보관). 응답을 막지 않도록 백그라운드로.
+    if images:
+        asyncio.create_task(_remember_images(images, last_msg.author))
+
+    attach: list[str] = []  # show_image가 회상해 첨부할 과거 사진 경로
+    async with last_msg.channel.typing():
         try:
-            reply = await handle_chat(message, prompt, images)
+            reply = await handle_chat(last_msg, prompt, images, attach_out=attach)
         except Exception as e:
             log.exception("응답 생성 실패")
             reply = f"오류가 발생했어요: {e}"
 
-    history[channel_id].append(f"{bot.user.display_name}(봇): {reply}")
+    reply = (reply or "").strip()
+
+    # 모델이 [pass]를 적으면 아무 말도 안 보낸다(끼어들 자리 아님). 창도 안 늘림.
+    if reply.lower() in _PASS_TOKENS and not attach:
+        return
+
     last_engaged[channel_id] = time.time()
-    await send_long(message, reply)
+    last_partner[channel_id] = last_msg.author.id
+
+    # 이모지 하나면 메시지 대신 그 이모지로 리액션 (첨부할 사진이 없을 때만)
+    if not attach and _is_reaction_only(reply):
+        try:
+            await last_msg.add_reaction(reply)
+            return
+        except Exception:
+            pass  # 유효한 이모지가 아니면 그냥 텍스트로 보냄
+
+    if reply and reply.lower() not in _PASS_TOKENS:
+        history[channel_id].append(f"{bot.user.display_name}(봇): {reply}")
+        await send_bubbles(last_msg, reply)
+
+    # 회상한 과거 사진들 첨부
+    for path in attach:
+        try:
+            await last_msg.channel.send(file=discord.File(path))
+        except Exception as e:
+            log.warning("사진 첨부 실패(%s): %s", path, e)
 
 
 async def _handle_sibling_turn(message: discord.Message, content: str) -> None:
@@ -518,6 +671,22 @@ async def model_cmd(ctx: commands.Context, name: str = None):
         await ctx.send(str(e))
 
 
+@bot.command(name="말투")
+async def persona_cmd(ctx: commands.Context, name: str = None):
+    """!말투 — 현재 말투 확인 / !말투 <이름> — 전환"""
+    names = persona.list_names()
+    if name is None:
+        await ctx.send(
+            f"현재 말투: **{persona.get_name()}**\n"
+            f"전환: `!말투 <{'|'.join(names)}>`"
+        )
+        return
+    if persona.set_persona(name):
+        await ctx.send(f"말투를 **{persona.get_name()}**(으)로 바꿨어요.")
+    else:
+        await ctx.send(f"그런 말투는 없어요. 가능: {' / '.join(f'`{n}`' for n in names)}")
+
+
 @bot.command(name="기억")
 async def memories_cmd(ctx: commands.Context):
     """!기억 — 나에 대한 기억 보기 / !기억 @유저 — 그 유저에 대한 기억 보기"""
@@ -555,11 +724,12 @@ async def help_cmd(ctx: commands.Context):
         f"- **\"{config.WAKE_WORD}\"** 로 시작하면 응답해요. (예: `{config.WAKE_WORD} 내 친구 누구야?`)\n"
         "- DM을 보내거나, 봇을 멘션하거나, 봇 메시지에 답장해도 돼요.\n"
         f"- 한 번 부른 뒤 잠깐(약 {config.ENGAGE_WINDOW_SEC}초)은 접두사 없이 말해도 이어서 대답해요.\n"
-        "- 이미지를 첨부하면 분석해서 설명해줘요.\n"
+        "- 이미지를 첨부하면 분석해서 반응하고, 사진을 기억해뒀다가 \"그때 그 사진 보여줘\" 하면 다시 꺼내줘요.\n"
         f"- 아무 메시지에 {config.SAVE_EMOJI} 이모지를 달면 그 내용을 기억으로 저장해요. (저장되면 ✅)\n"
         "- 대화 중 나온 정보와 유저 간 관계를 자동으로 기억해요.\n\n"
         "**명령어**\n"
         "`!모델` — 현재 AI 모델 확인 / `!모델 gemini|grok|openai` — 전환\n"
+        f"`!말투` — 현재 말투 확인 / `!말투 <{'|'.join(persona.list_names())}>` — 전환\n"
         "`!기억 [@유저]` — 저장된 기억과 관계 보기\n"
         "`!잊어` — 나에 대한 기억 전부 삭제\n"
         f"`!대화 {config.WAKE_WORD} <상대봇> [주제]` — 두 AI 봇이 서로 대화 / `!대화중지` — 멈춤\n"

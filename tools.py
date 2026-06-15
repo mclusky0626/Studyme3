@@ -1,4 +1,6 @@
 """LLM 펑션컬링 도구 정의 + 실행(dispatch)."""
+import os
+
 import memory
 import relations
 import web
@@ -142,6 +144,31 @@ TOOLS = [
     {
         "type": "function",
         "function": {
+            "name": "show_image",
+            "description": (
+                "과거에 유저가 보냈던 사진을 다시 찾아 채팅에 보여준다. "
+                "유저가 '그때 그 사진', '내가 보낸 사진 다시 보여줘', '저번 사진' 처럼 "
+                "예전 이미지를 다시 보고 싶어 하면 사용. 찾은 사진은 자동으로 채팅에 첨부된다."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "찾을 사진 설명(자연어). 예: '강아지 사진', '저번에 보낸 음식 사진'",
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "description": "특정 유저가 보낸 사진만 찾으려면 그 유저의 디스코드 ID (선택)",
+                    },
+                },
+                "required": ["query"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "find_user",
             "description": "닉네임으로 서버에서 본 적 있는 유저를 찾아서 디스코드 ID를 알아낸다.",
             "parameters": {
@@ -159,7 +186,7 @@ TOOLS = [
 ]
 
 
-async def dispatch(name: str, args: dict) -> dict:
+async def dispatch(name: str, args: dict, ctx: dict | None = None) -> dict:
     if name == "save_memory":
         # unknown:이름 유저도 장부에 올려서 다음 find_user에서 찾을 수 있게 한다
         relations.remember_user(args["user_id"], args["user_name"])
@@ -207,6 +234,19 @@ async def dispatch(name: str, args: dict) -> dict:
         if not res["answer"]:
             return {"answer": "", "sources": [], "note": "검색 결과를 찾지 못함"}
         return {"answer": res["answer"], "sources": res["sources"]}
+
+    if name == "show_image":
+        found = await memory.search_images(args["query"], args.get("user_id"))
+        found = [m for m in found if m["image_path"] and os.path.exists(m["image_path"])]
+        if not found:
+            return {"images": [], "note": "관련된 사진을 찾지 못함"}
+        found = found[:2]  # 한 번에 너무 많이 첨부하지 않게
+        if ctx is not None:
+            ctx.setdefault("attach", []).extend(m["image_path"] for m in found)
+        return {
+            "images": [{"description": m["content"], "saved_at": m["saved_at"]} for m in found],
+            "note": "이 사진들을 채팅에 첨부했음. 사진에 대해 자연스럽게 한마디만 곁들여라.",
+        }
 
     if name == "find_user":
         users = relations.find_users(args["name"])

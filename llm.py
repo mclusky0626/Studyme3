@@ -65,38 +65,112 @@ def _client(provider: str) -> AsyncOpenAI:
     return _clients[provider]
 
 
+def _field(obj, name: str, default=None):
+    """OpenAI-compatible providers may return SDK objects or plain dicts."""
+    if isinstance(obj, dict):
+        return obj.get(name, default)
+    return getattr(obj, name, default)
+
+
+def _first_message_content(res) -> str:
+    choices = _field(res, "choices", [])
+    if not choices:
+        return ""
+    msg = _field(choices[0], "message")
+    return (_field(msg, "content") or "").strip()
+
+
 async def embed(text: str) -> list[float]:
     client = _client("gemini")
     res = await client.embeddings.create(model=config.EMBED_MODEL, input=text)
     return res.data[0].embedding
 
 
-async def judge_addressed(bot_name: str, history_text: str, message_text: str) -> bool:
-    """접두사 없는 메시지가 '봇에게 하는 말'인지 가볍게 판단한다 (YES/NO).
+_ollama_client: AsyncOpenAI | None = None
 
-    호명 후 활성 대화 창 안에서만 호출되며, 끼어들기를 막기 위해 보수적으로 판단한다.
+
+def _ollama() -> AsyncOpenAI:
+    """Ollama의 OpenAI 호환 엔드포인트 클라이언트(로컬, 키 불필요)."""
+    global _ollama_client
+    if _ollama_client is None:
+        _ollama_client = AsyncOpenAI(base_url=config.OLLAMA_BASE_URL, api_key="ollama")
+    return _ollama_client
+
+
+async def describe_image(data_uri: str, caption: str = "") -> str:
+    """이미지를 나중에 검색·기억하기 좋게 한국어로 사실적으로 묘사한다(기억 저장용)."""
+    prompt = (
+        "이 이미지를 나중에 검색해서 떠올리기 좋게 한국어 한두 문장으로 비민감하게 묘사해라. "
+        "성적 요소나 노출은 직접적·자세히 묘사하지 말고, 필요한 경우 의상, 구도, 스타일, "
+        "분위기 같은 완곡한 시각 단서로만 표현해라. "
+        "무엇이 보이는지 핵심 위주로(인물·사물·장소·색감·분위기). 군더더기 없이."
+    )
+    if caption:
+        prompt += f" 보낸 사람이 함께 적은 말: {caption}"
+    content = [
+        {"type": "text", "text": prompt},
+        {"type": "image_url", "image_url": {"url": data_uri}},
+    ]
+    res = await _client(_current).chat.completions.create(
+        model=get_model(),
+        messages=[{"role": "user", "content": content}],
+        max_tokens=300, temperature=0,
+    )
+    return _first_message_content(res) or "이미지 설명을 생성하지 못함"
+
+
+async def judge_engage(bot_name: str, history_text: str, new_message: str,
+                       was_talking_to_me: bool = False) -> bool:
+    """단톡방에서 봇이 이 메시지에 끼어들어 답하는 게 자연스러운지 판단한다 (YES/NO).
+
+    호명 후 활성 창 안에서, 로컬 규칙으로 명확히 가려지지 않은 메시지에만 호출된다.
+    기본 백엔드는 Ollama 로컬 경량 모델(config.ENGAGE_JUDGE)이라 토큰을 쓰지 않는다.
+    핵심은 '누구에게 하는 말인가' — 다른 사람을 부르면 끼어들지 않는다.
     """
     sys = (
-        f'너는 디스코드 대화에서 방금 들어온 메시지가 봇 "{bot_name}"에게 하는 말인지 '
-        "판단하는 분류기다. 직전까지 봇과 대화가 오갔다. 새 메시지가 봇에게 묻거나, "
-        "봇의 직전 말에 답하거나, 봇이 이어서 반응하길 기대하는 흐름이면 YES. "
-        "다른 사람끼리의 잡담이거나 봇과 무관하면 NO. "
-        "오직 YES 또는 NO 한 단어로만 답해라."
+        f'너는 디스코드 단톡방 참여자 "{bot_name}"(봇)다. [새 메시지]가 너에게 하는 말이거나 '
+        f"너에 대한 말이면 YES, 다른 사람에게 하는 말이거나 너와 무관한 사담이면 NO. "
+        f"오직 YES 또는 NO로만 답해라.\n\n"
+        f"판단 기준:\n"
+        f"- 너를 부르거나 너에게 묻는 말 -> YES\n"
+        f"- 너의 직전 말에 대한 반응/이어지는 질문 -> YES\n"
+        f'- 너의 정체를 묻는 말("쟤 누구야?","봇이야?") -> YES\n'
+        f'- 다른 사람 이름을 부르는 말("철수야~") -> NO\n'
+        f"- 너와 상관없는 잡담 -> NO\n\n"
+        f"예시:\n"
+        f"[상황] {bot_name}가 방금 자기소개함 / [새 메시지] 쟤가 누구임? -> YES\n"
+        f"[상황] A가 {bot_name}와 대화중 / [새 메시지] 그래서 그게 뭔데? -> YES\n"
+        f"[상황] A가 {bot_name}와 대화중 / [새 메시지] 응 고마워 너 덕분이야 -> YES\n"
+        f"[상황] A가 {bot_name}와 대화중 / [새 메시지] 야 철수야 밥먹자 -> NO\n"
+        f"[상황] A가 {bot_name}와 대화중 / [새 메시지] 근데 영희는 언제 온대? -> NO\n"
+        f"[상황] 사람들끼리 잡담중 / [새 메시지] ㅋㅋㅋ 철수 어디감 -> NO"
     )
-    user = f"[최근 대화]\n{history_text}\n\n[새 메시지]\n{message_text}"
+    situation = (
+        f"이 사람은 직전까지 {bot_name}와 대화 중이었다."
+        if was_talking_to_me else
+        f"이 사람이 직전에 {bot_name}와 대화 중이었는지는 불분명하다."
+    )
+    user = f"[최근 대화]\n{history_text}\n\n[상황] {situation}\n[새 메시지] {new_message}"
     try:
-        res = await _client(_current).chat.completions.create(
-            model=get_model(),
+        if config.ENGAGE_JUDGE == "ollama":
+            client, model = _ollama(), config.OLLAMA_JUDGE_MODEL
+        else:
+            client, model = _client(_current), get_model()
+        res = await client.chat.completions.create(
+            model=model,
             messages=[{"role": "system", "content": sys},
                       {"role": "user", "content": user}],
             temperature=0,
             # gemini-2.5-flash 등 thinking 모델이 사고 토큰을 쓰고도 답을 내도록 넉넉히 둔다
             max_tokens=256,
         )
-        ans = (res.choices[0].message.content or "").strip().upper()
-        return ans.startswith("Y")
-    except Exception:
-        return False  # 판단 실패 시 끼어들지 않음
+        ans = _first_message_content(res).upper()
+        return ans.startswith("Y") or "YES" in ans
+    except Exception as e:
+        # Ollama 미설치/미실행 등 — 끼어들지 않는 쪽으로 안전하게.
+        import logging
+        logging.getLogger("memorybot").warning("끼어들기 판단 실패(%s): %s", config.ENGAGE_JUDGE, e)
+        return False
 
 
 async def run_agent(messages: list[dict], tools: list[dict], dispatch,
@@ -112,34 +186,40 @@ async def run_agent(messages: list[dict], tools: list[dict], dispatch,
         res = await client.chat.completions.create(
             model=model, messages=messages, tools=tools,
         )
-        msg = res.choices[0].message
-        if not msg.tool_calls:
-            return msg.content or ""
+        choices = _field(res, "choices", [])
+        msg = _field(choices[0], "message", {}) if choices else {}
+        tool_calls = _field(msg, "tool_calls") or []
+        content = _field(msg, "content") or ""
+        if not tool_calls:
+            return content
 
         messages.append({
             "role": "assistant",
-            "content": msg.content or "",
+            "content": content,
             "tool_calls": [
                 {
-                    "id": tc.id,
+                    "id": _field(tc, "id"),
                     "type": "function",
                     "function": {
-                        "name": tc.function.name,
-                        "arguments": tc.function.arguments,
+                        "name": _field(_field(tc, "function", {}), "name"),
+                        "arguments": _field(_field(tc, "function", {}), "arguments"),
                     },
                 }
-                for tc in msg.tool_calls
+                for tc in tool_calls
             ],
         })
-        for tc in msg.tool_calls:
+        for tc in tool_calls:
+            func = _field(tc, "function", {})
+            name = _field(func, "name")
+            arguments = _field(func, "arguments") or "{}"
             try:
-                args = json.loads(tc.function.arguments or "{}")
-                result = await dispatch(tc.function.name, args)
+                args = json.loads(arguments)
+                result = await dispatch(name, args)
             except Exception as e:  # 도구 실패가 대화 전체를 죽이지 않도록
                 result = {"error": str(e)}
             messages.append({
                 "role": "tool",
-                "tool_call_id": tc.id,
+                "tool_call_id": _field(tc, "id"),
                 "content": json.dumps(result, ensure_ascii=False),
             })
 

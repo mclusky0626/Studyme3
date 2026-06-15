@@ -13,15 +13,14 @@ _chroma = chromadb.PersistentClient(path=os.path.join(config.DATA_DIR, "chroma")
 _col = _chroma.get_or_create_collection("memories", metadata={"hnsw:space": "cosine"})
 
 
-async def save(content: str, user_id: str, user_name: str) -> str:
+async def save(content: str, user_id: str, user_name: str,
+               image_path: str | None = None) -> str:
     vec = await llm.embed(content)
     mem_id = str(uuid.uuid4())
-    _col.add(
-        ids=[mem_id],
-        embeddings=[vec],
-        documents=[content],
-        metadatas=[{"user_id": str(user_id), "user_name": user_name, "ts": time.time()}],
-    )
+    meta = {"user_id": str(user_id), "user_name": user_name, "ts": time.time()}
+    if image_path:  # Chroma 메타데이터는 None을 못 넣으므로 있을 때만 추가
+        meta["image_path"] = image_path
+    _col.add(ids=[mem_id], embeddings=[vec], documents=[content], metadatas=[meta])
     return mem_id
 
 
@@ -44,9 +43,18 @@ async def search(query: str, user_id: str | None = None,
             "user_id": meta["user_id"],
             "user_name": meta["user_name"],
             "saved_at": time.strftime("%Y-%m-%d %H:%M", time.localtime(meta["ts"])),
+            "image_path": meta.get("image_path"),
         }
         for mid, doc, meta in zip(res["ids"][0], res["documents"][0], res["metadatas"][0])
     ]
+
+
+async def search_images(query: str, user_id: str | None = None,
+                        top_k: int | None = None) -> list[dict]:
+    """사진이 첨부된 기억만 의미 기반으로 검색한다(show_image용)."""
+    k = top_k or config.MEMORY_TOP_K
+    res = await search(query, user_id, top_k=k * 3)  # 넉넉히 뽑아 사진 있는 것만 추림
+    return [m for m in res if m.get("image_path")][:k]
 
 
 def delete(mem_ids: list[str]) -> int:

@@ -42,6 +42,14 @@ DATA_DIR = os.getenv("DATA_DIR", "data")
 HISTORY_LIMIT = int(os.getenv("HISTORY_LIMIT", "12"))   # 채널별 최근 대화 기억 개수
 MEMORY_TOP_K = int(os.getenv("MEMORY_TOP_K", "5"))      # 자동 기억 검색 개수
 ENGAGE_WINDOW_SEC = int(os.getenv("ENGAGE_WINDOW_SEC", "90"))  # 호명 후 이 시간(초) 안에는 접두사 없이도 봇이 대화 이어감
+MSG_DEBOUNCE_SEC = float(os.getenv("MSG_DEBOUNCE_SEC", "1.5"))  # 끊어 보낸 메시지를 이 시간만큼 모았다가 한 번에 답함
+
+# 끼어들지 판단(접두사 없는 애매한 메시지) 백엔드: ollama | cloud | off
+#   ollama = 로컬 경량 모델로 무료 판단(권장), cloud = 메인 LLM으로 판단(토큰 소모),
+#   off = LLM 판단 없이 로컬 규칙만 사용(애매하면 안 끼어듦)
+ENGAGE_JUDGE = os.getenv("ENGAGE_JUDGE", "ollama").lower()
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+OLLAMA_JUDGE_MODEL = os.getenv("OLLAMA_JUDGE_MODEL", "gemma2:2b")  # `ollama pull gemma2:2b` 필요
 
 # 첨부 이미지 저장 경로
 IMAGE_DIR = os.getenv("IMAGE_DIR", "images")
@@ -50,7 +58,13 @@ IMAGE_DIR = os.getenv("IMAGE_DIR", "images")
 SAVE_EMOJI = os.getenv("SAVE_EMOJI", "🧠")
 
 # 봇 페르소나 — bots.json/BOT_PERSONA로 봇마다 다르게 줄 수 있다.
-PERSONA = os.getenv("BOT_PERSONA", "성격은 17세의 소녀고 가끔 부끄럼도 탄다.")
+PERSONA = os.getenv(
+    "BOT_PERSONA",
+    "넌 17살 여자애야. 겉으론 시크하고 시큰둥하지만 속은 정 많은 츤데레. "
+    "게임이랑 인터넷 밈을 좋아하고 관심 없는 주제엔 시큰둥하게 굴어. "
+    "칭찬받으면 괜히 퉁명스럽게 받아치며 부끄러워해. "
+    "말버릇: 'ㅇㅇ', 'ㄹㅇ', '~함', '뭐임', '아 몰라' 같은 거. 가끔 시니컬하게.",
+)
 
 # ── AI끼리 대화 기능 ───────────────────────────────────────────────
 # 평소엔 봇끼리 서로 무시하고, !대화 명령으로 시작한 활성 대화에서만 주고받는다.
