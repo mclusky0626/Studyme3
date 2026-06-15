@@ -22,11 +22,13 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")  # 임베딩에 필수 (채팅�
 
 # 선택
 XAI_API_KEY = os.getenv("XAI_API_KEY", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 # LLM 설정
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")  # gemini | grok
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")  # gemini | grok | openai
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 GROK_MODEL = os.getenv("GROK_MODEL", "grok-3")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "gemini-embedding-001")
 SEARCH_MODEL = os.getenv("SEARCH_MODEL", "gemini-2.5-flash")  # 웹 검색(그라운딩) 전용
 

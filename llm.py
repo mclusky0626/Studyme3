@@ -20,10 +20,19 @@ PROVIDERS = {
         "api_key": lambda: config.XAI_API_KEY,
         "model": lambda: config.GROK_MODEL,
     },
+    "openai": {
+        "base_url": "https://api.openai.com/v1",
+        "api_key": lambda: config.OPENAI_API_KEY,
+        "model": lambda: config.OPENAI_MODEL,
+    },
 }
 
 _current = config.LLM_PROVIDER if config.LLM_PROVIDER in PROVIDERS else "gemini"
 _clients: dict[str, AsyncOpenAI] = {}
+
+
+def list_providers() -> list[str]:
+    return list(PROVIDERS)
 
 
 def get_provider() -> str:

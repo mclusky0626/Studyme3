@@ -502,17 +502,18 @@ async def ai_chat_stop_cmd(ctx: commands.Context):
 @bot.command(name="모델")
 async def model_cmd(ctx: commands.Context, name: str = None):
     """!모델 — 현재 모델 확인 / !모델 gemini|grok — 전환"""
+    choices = " / ".join(f"`{p}`" for p in llm.list_providers())
     if name is None:
         await ctx.send(
             f"현재 모델: **{llm.get_provider()}** (`{llm.get_model()}`)\n"
-            f"전환: `!모델 gemini` 또는 `!모델 grok`"
+            f"전환: `!모델 <{'|'.join(llm.list_providers())}>`"
         )
         return
     try:
         if llm.set_provider(name):
             await ctx.send(f"모델을 **{llm.get_provider()}** (`{llm.get_model()}`)로 전환했어요.")
         else:
-            await ctx.send("`gemini` 또는 `grok` 중에서 골라주세요.")
+            await ctx.send(f"{choices} 중에서 골라주세요.")
     except RuntimeError as e:
         await ctx.send(str(e))
 
@@ -558,7 +559,7 @@ async def help_cmd(ctx: commands.Context):
         f"- 아무 메시지에 {config.SAVE_EMOJI} 이모지를 달면 그 내용을 기억으로 저장해요. (저장되면 ✅)\n"
         "- 대화 중 나온 정보와 유저 간 관계를 자동으로 기억해요.\n\n"
         "**명령어**\n"
-        "`!모델` — 현재 AI 모델 확인 / `!모델 gemini|grok` — 전환\n"
+        "`!모델` — 현재 AI 모델 확인 / `!모델 gemini|grok|openai` — 전환\n"
         "`!기억 [@유저]` — 저장된 기억과 관계 보기\n"
         "`!잊어` — 나에 대한 기억 전부 삭제\n"
         f"`!대화 {config.WAKE_WORD} <상대봇> [주제]` — 두 AI 봇이 서로 대화 / `!대화중지` — 멈춤\n"
