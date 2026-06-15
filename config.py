@@ -26,7 +26,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 # LLM 설정
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")  # gemini | grok | openai
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
 GROK_MODEL = os.getenv("GROK_MODEL", "grok-3")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "gemini-embedding-001")
