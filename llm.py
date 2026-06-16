@@ -193,21 +193,12 @@ async def run_agent(messages: list[dict], tools: list[dict], dispatch,
         if not tool_calls:
             return content
 
-        messages.append({
-            "role": "assistant",
-            "content": content,
-            "tool_calls": [
-                {
-                    "id": _field(tc, "id"),
-                    "type": "function",
-                    "function": {
-                        "name": _field(_field(tc, "function", {}), "name"),
-                        "arguments": _field(_field(tc, "function", {}), "arguments"),
-                    },
-                }
-                for tc in tool_calls
-            ],
-        })
+        # thought_signature 등 벤더 전용 필드를 보존하기 위해 msg를 통째로 넣는다.
+        # SDK 객체이면 model_dump(), dict이면 그대로 사용한다.
+        if hasattr(msg, "model_dump"):
+            messages.append(msg.model_dump(exclude_none=True))
+        else:
+            messages.append(msg)
         for tc in tool_calls:
             func = _field(tc, "function", {})
             name = _field(func, "name")
