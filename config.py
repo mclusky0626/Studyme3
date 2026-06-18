@@ -20,6 +20,14 @@ except Exception:
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN", "")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")  # 임베딩에 필수 (채팅은 선택)
 
+# 여러 Gemini 키를 콤마로 주면, 앞 키 한도(429/RESOURCE_EXHAUSTED)가 차는 대로
+# 자동으로 다음 키로 전환한다. GEMINI_API_KEY는 항상 '현재 사용 중인 키'를 가리킨다.
+GEMINI_API_KEYS = [k.strip() for k in os.getenv("GEMINI_API_KEYS", "").split(",") if k.strip()]
+if not GEMINI_API_KEYS and GEMINI_API_KEY:
+    GEMINI_API_KEYS = [GEMINI_API_KEY]
+if GEMINI_API_KEYS:
+    GEMINI_API_KEY = GEMINI_API_KEYS[0]
+
 # 선택
 XAI_API_KEY = os.getenv("XAI_API_KEY", "")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")

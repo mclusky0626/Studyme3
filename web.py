@@ -16,25 +16,36 @@ except ImportError:  # 패키지 미설치 시에도 봇이 동작하도록
     types = None
 
 _client = None
+_client_key = None
 
 
 def _get_client():
-    global _client
-    if _client is None:
+    # 키가 (자동 전환 등으로) 바뀌면 클라이언트를 새 키로 다시 만든다.
+    global _client, _client_key
+    if _client is None or _client_key != config.GEMINI_API_KEY:
         _client = genai.Client(api_key=config.GEMINI_API_KEY)
+        _client_key = config.GEMINI_API_KEY
     return _client
 
 
 def _search_sync(query: str) -> dict:
     if genai is None:
         return {"available": False, "answer": "", "sources": []}
-    resp = _get_client().models.generate_content(
-        model=config.SEARCH_MODEL,
-        contents=query,
-        config=types.GenerateContentConfig(
-            tools=[types.Tool(google_search=types.GoogleSearch())],
-        ),
-    )
+    import llm
+    while True:
+        try:
+            resp = _get_client().models.generate_content(
+                model=config.SEARCH_MODEL,
+                contents=query,
+                config=types.GenerateContentConfig(
+                    tools=[types.Tool(google_search=types.GoogleSearch())],
+                ),
+            )
+            break
+        except Exception as e:
+            if llm._is_quota_error(e) and llm._rotate_gemini():
+                continue
+            raise
     answer = (resp.text or "").strip()
 
     # 그라운딩 출처(있으면) 뽑아내기
