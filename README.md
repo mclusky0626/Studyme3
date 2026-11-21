@@ -1,9 +1,9 @@
 # 장기기억 AI 디스코드 봇
 
 > **[공지] Studyme5 출시** — 이 프로젝트(Studyme3)의 후속 버전인 **Studyme5**가 출시되었습니다.
-> 성능이 대폭 향상되었으니 신규 사용자는 Studyme5 사용을 권장합니다.
+> 성능이 대폭 향상되었으니 신규 사용자는 Studyme5 사용을 권장합니다. 다만 5버젼은 도커와 성능을 많이 잡아먹기 때문에 경량하게 쓰려면 이거 쓰세요
 >
-> 👉 [Studyme5 바로가기](https://github.com/mclusky0626/Studyme5)
+>  [Studyme5 바로가기](https://github.com/mclusky0626/Studyme5)
 
 ---
 
