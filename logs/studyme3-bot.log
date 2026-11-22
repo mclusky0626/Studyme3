@@ -1,0 +1,384 @@
+WARNING:discord.client:PyNaCl is not installed, voice will NOT be supported
+WARNING:discord.client:davey is not installed, voice will NOT be supported
+[2026-07-18 04:04:39] [INFO    ] discord.client: logging in using static token
+INFO:discord.client:logging in using static token
+[2026-07-18 04:04:40] [INFO    ] discord.gateway: Shard ID None has connected to Gateway (Session ID: c576eccc98b588fc638362ed39a34265).
+INFO:discord.gateway:Shard ID None has connected to Gateway (Session ID: c576eccc98b588fc638362ed39a34265).
+INFO:memorybot:로그인 완료: fuji#3685 (ID: 1481665944085594223) / 모델: gemini(gemini-3.1-flash-lite)
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527754215043240129_0_1147345_anal_bike_shorts_breasts_cameltoe_cum_kurosawa_ruby_loli_nipples_no_bra_nopan_penis_pussy_sex_shirt_lift_torn_clothes_uncensored_unsfrau.png (7055265 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527754215043240129_0_1147345_anal_bike_shorts_breasts_cameltoe_cum_kurosawa_ruby_loli_nipples_no_bra_nopan_penis_pussy_sex_shirt_lift_torn_clothes_uncensored_unsfrau.png
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527754573765410816_0_1152830_anal_anus_ass_ass_grab_bondage_censored_masturbation_naked_nipples_pussy_pussy_juice_sex_sketch_sooon.jpg (549976 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527754573765410816_0_1152830_anal_anus_ass_ass_grab_bondage_censored_masturbation_naked_nipples_pussy_pussy_juice_sex_sketch_sooon.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527754736231645375_0_1152006_anal_ass_bakemonogatari_monochrome_monogatari_series_naked_nipples_penis_pointy_ears_pussy_roropull_sex_sketch_uncensored.png (8523176 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527754736231645375_0_1152006_anal_ass_bakemonogatari_monochrome_monogatari_series_naked_nipples_penis_pointy_ears_pussy_roropull_sex_sketch_uncensored.png
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527755120035500143_0_1149947_anal_anal_beads_ass_bikini_blue_archive_bottomless_fellatio_halo_kasumizawa_miyu_laochen_loli_panty_pull_penis_pussy_pussy_juice_swimsuits_uncensored.jpg (698722 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527755120035500143_0_1149947_anal_anal_beads_ass_bikini_blue_archive_bottomless_fellatio_halo_kasumizawa_miyu_laochen_loli_panty_pull_penis_pussy_pussy_juice_swimsuits_uncensored.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527755343709470924_0_1153883_anal_animal_ears_anus_censored_cum_fuiba_fuyu_gochuumon_wa_usagi_desu_ka__kafuu_chino_loli_naked_nekomimi_pussy_sakamatashachi_tail_wet.jpg (2117544 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527755343709470924_0_1153883_anal_animal_ears_anus_censored_cum_fuiba_fuyu_gochuumon_wa_usagi_desu_ka__kafuu_chino_loli_naked_nekomimi_pussy_sakamatashachi_tail_wet.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 직접 응답이 비어 텍스트 분석으로 폴백
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527755551965057024_0_1164284_anal_anal_beads_ass_breasts_dildo_kakuchou_no_ou_maebari_no_bra_nopan_pantyhose_pasties_pussy_pussy_juice_tail_uncensored.png (6222053 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527755551965057024_0_1164284_anal_anal_beads_ass_breasts_dildo_kakuchou_no_ou_maebari_no_bra_nopan_pantyhose_pasties_pussy_pussy_juice_tail_uncensored.png
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527755853711675594_0_1158107_anal_anal_beads_anus_ass_bikini_blue_archive_breasts_cromachina_cum_feet_halo_loli_nipples_panty_pull_pussy_swimsuits_thong_uncensored_wings.png (4832143 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527755853711675594_0_1158107_anal_anal_beads_anus_ass_bikini_blue_archive_breasts_cromachina_cum_feet_halo_loli_nipples_panty_pull_pussy_swimsuits_thong_uncensored_wings.png
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527756154728480939_0_1156131_anal_cum_feet_loli_mogu_panty_pull_pussy_to_love_ru_to_love_ru_darkness_uncensored_yuuki_mikan.jpg (203776 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527756154728480939_0_1156131_anal_cum_feet_loli_mogu_panty_pull_pussy_to_love_ru_to_love_ru_darkness_uncensored_yuuki_mikan.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527756427601383656_0_1210174_anal_bondage_chabenmus_feet_honkai__star_rail_naked_nipples_pussy_pussy_juice_sparkle_tattoo_uncensored_wet.png (4177559 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527756427601383656_0_1210174_anal_bondage_chabenmus_feet_honkai__star_rail_naked_nipples_pussy_pussy_juice_sparkle_tattoo_uncensored_wet.png
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527756508706639933_0_1207256_anal_anal_beads_areola_bandaid_blue_archive_bottomless_breasts_dress_shirt_halo_maebari_no_bra_open_shirt_pasties_thighhighs_urawa_hanako_wet.jpg (682061 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527756508706639933_0_1207256_anal_anal_beads_areola_bandaid_blue_archive_bottomless_breasts_dress_shirt_halo_maebari_no_bra_open_shirt_pasties_thighhighs_urawa_hanako_wet.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527756658913054780_0_1186905_anal_anus_feet_kotoha_mitsuboshi_colors_loli_mitsuboshi_colors_naked_nipples_pestil_pussy_uncensored.png (2615545 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527756658913054780_0_1186905_anal_anus_feet_kotoha_mitsuboshi_colors_loli_mitsuboshi_colors_naked_nipples_pestil_pussy_uncensored.png
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527756797480402996_0_1186572_anal_anal_beads_anus_ass_do_it_yourself_feet_juliet_queen_elizabeth_viii_loli_naked_nipples_pestil_pussy_uncensored.png (1204244 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527756797480402996_0_1186572_anal_anal_beads_anus_ass_do_it_yourself_feet_juliet_queen_elizabeth_viii_loli_naked_nipples_pestil_pussy_uncensored.png
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527757069283889324_0_1184477_akelp_anal_anal_beads_animal_ears_bondage_fingering_loli_naked_nekomimi_nipples_pussy_pussy_juice_tail_uncensored_wet_yuri.jpg (266357 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527757113919668444_0_1181394_anal_anal_beads_animal_ears_bunny_ears_bunny_girl_cameltoe_cum_dikko_feet_garter_hololive_hoshimachi_suisei_no_bra_tail_thighhighs.jpg (284363 bytes)
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757069283889324_0_1184477_akelp_anal_anal_beads_animal_ears_bondage_fingering_loli_naked_nekomimi_nipples_pussy_pussy_juice_tail_uncensored_wet_yuri.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757113919668444_0_1181394_anal_anal_beads_animal_ears_bunny_ears_bunny_girl_cameltoe_cum_dikko_feet_garter_hololive_hoshimachi_suisei_no_bra_tail_thighhighs.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527757277421895742_0_1218847_anal_animal_ears_anus_ass_censored_cum_fellatio_furina_garter_loli_m-da_s-tarou_naked_nekomimi_nipples_penis_pussy_pussy_juice_sex_tail_wet.jpg (2305641 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527757296573353995_0_1216678_anal_anal_beads_ass_blue_archive_dildo_halo_hayase_yuuka_kurotsuki_machi_naked_nipples_pantsu_panty_pull_pussy_juice_topless_ushio_noa_wet_yuri.jpg (287732 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757277421895742_0_1218847_anal_animal_ears_anus_ass_censored_cum_fellatio_furina_garter_loli_m-da_s-tarou_naked_nekomimi_nipples_penis_pussy_pussy_juice_sex_tail_wet.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757296573353995_0_1216678_anal_anal_beads_ass_blue_archive_dildo_halo_hayase_yuuka_kurotsuki_machi_naked_nipples_pantsu_panty_pull_pussy_juice_topless_ushio_noa_wet_yuri.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527757478115283195_0_1216645_anal_animal_ears_ass_blue_archive_halo_kitsune_loli_nopan_pantyhose_pasties_pussy_tagme_tail_topless_uncensored_wet_yurizono_seia.jpg (186423 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757478115283195_0_1216645_anal_animal_ears_ass_blue_archive_halo_kitsune_loli_nopan_pantyhose_pasties_pussy_tagme_tail_topless_uncensored_wet_yurizono_seia.jpg
+INFO:memorybot:이미지 저장: images/1527757496016568432_0_1213619_anal_animal_ears_blue_archive_diu1_halo_loli_naked_nekomimi_nipples_photoshop_professor_niyaniya_pussy_tail_uncensored.png (2052961 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757496016568432_0_1213619_anal_animal_ears_blue_archive_diu1_halo_loli_naked_nekomimi_nipples_photoshop_professor_niyaniya_pussy_tail_uncensored.png
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527757667647619102_0_1244805_anal_cum_houkisei_no_bra_nopan_pantyhose_penis_phoebe_pussy_see_through_sex_shirt_lift_skirt_lift_torn_clothes_uncensored_wet_wuthering_waves.jpg (321061 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527757688774201354_0_858224_anus_feet_naked_neon_genesis_evangelion_nipples_pubic_hair_pussy_souryuu_asuka_langley_sydus_uncensored.jpg (259474 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757688774201354_0_858224_anus_feet_naked_neon_genesis_evangelion_nipples_pubic_hair_pussy_souryuu_asuka_langley_sydus_uncensored.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757667647619102_0_1244805_anal_cum_houkisei_no_bra_nopan_pantyhose_penis_phoebe_pussy_see_through_sex_shirt_lift_skirt_lift_torn_clothes_uncensored_wet_wuthering_waves.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 직접 응답이 비어 텍스트 분석으로 폴백
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527757832420589678_0_1129229_bikini_cameltoe_neon_genesis_evangelion_optionaltypo_pussy_souryuu_asuka_langley_swimsuits_thong_typo_requiemdusk.png (10425651 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:memorybot:이미지 저장: images/1527757845381120000_0_1244805_anal_cum_houkisei_no_bra_nopan_pantyhose_penis_phoebe_pussy_see_through_sex_shirt_lift_skirt_lift_torn_clothes_uncensored_wet_wuthering_waves.jpg (321061 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757845381120000_0_1244805_anal_cum_houkisei_no_bra_nopan_pantyhose_penis_phoebe_pussy_see_through_sex_shirt_lift_skirt_lift_torn_clothes_uncensored_wet_wuthering_waves.jpg
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527757832420589678_0_1129229_bikini_cameltoe_neon_genesis_evangelion_optionaltypo_pussy_souryuu_asuka_langley_swimsuits_thong_typo_requiemdusk.png
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:memorybot:이미지 저장: images/1527758001211969567_0_1230234_ayanami_rei_bottomless_breasts_detexted_nipples_no_bra_pussy_pussy_juice_qiandaiyiyu_souryuu_asuka_langley_uncensored_wet_yuri.png (4469802 bytes)
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/embeddings "HTTP/1.1 200 OK"
+INFO:memorybot:사진 기억 저장: images/1527758001211969567_0_1230234_ayanami_rei_bottomless_breasts_detexted_nipples_no_bra_pussy_pussy_juice_qiandaiyiyu_souryuu_asuka_langley_uncensored_wet_yuri.png
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+[2026-07-18 06:13:09] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 06:37:54] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 06:57:18] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 09:28:19] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 10:59:56] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 11:15:30] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 11:34:13] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 14:05:36] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 14:46:41] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 15:22:05] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 17:30:13] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 18:00:26] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 18:28:40] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 20:30:27] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 21:08:36] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 21:19:05] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 23:06:28] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-18 23:33:10] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 01:24:52] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 02:16:35] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 03:04:02] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 06:14:50] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 07:24:33] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 10:15:31] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 12:47:40] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 13:51:18] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 17:28:08] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 18:32:41] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 20:47:29] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-19 22:41:44] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 01:37:13] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 04:02:19] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 05:19:51] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 06:30:36] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 08:28:53] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 09:46:46] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 10:53:12] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 12:37:03] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 13:55:29] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 17:50:10] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 20:33:25] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 20:36:30] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 20:46:54] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 21:26:12] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-20 22:39:00] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 01:34:54] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 01:47:53] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 03:57:33] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 04:49:37] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 05:24:09] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 09:01:26] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 11:34:24] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 11:52:53] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 14:39:58] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 15:27:44] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 16:08:56] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 18:17:32] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 20:40:30] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 21:07:40] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 21:14:44] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-21 23:59:28] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 01:27:57] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 01:59:04] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 02:40:14] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 02:56:42] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 03:19:38] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 03:44:01] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 05:48:00] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 06:37:07] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 09:25:14] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 10:22:58] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 10:55:26] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 11:09:52] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 14:45:17] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 15:48:51] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 17:44:45] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 19:01:27] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 19:34:46] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 19:56:38] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 20:38:12] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 21:04:52] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-22 22:56:24] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-23 00:10:44] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-23 01:38:24] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-23 03:53:06] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-23 04:58:02] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-23 07:53:16] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-23 09:16:50] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+[2026-07-23 11:42:24] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
+INFO:discord.gateway:Shard ID None has successfully RESUMED session c576eccc98b588fc638362ed39a34265.
